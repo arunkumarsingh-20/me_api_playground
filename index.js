@@ -9,6 +9,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+
+
 // =========================================================
 // REQUIREMENT 1c: GET /health for liveness
 // =========================================================
@@ -135,6 +137,21 @@ app.get('/search', async (req, res) => {
     res.status(500).json({ error: "Search failed" });
   }
 });
+
+
+// Root Endpoint (The Welcome Page)
+app.get('/', (req, res) => {
+  res.send(`
+    <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+      <h1>🚀 Me-API is Alive!</h1>
+      <p>Your backend is running successfully.</p>
+      <p>Try these endpoints:</p>
+      <a href="/profile">/profile</a> | <a href="/projects">/projects</a> | <a href="/health">/health</a>
+    </div>
+  `);
+});
+
+// app.listen is below here...
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
