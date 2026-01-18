@@ -1,0 +1,62 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
+  bio         String?
+  github      String?
+  linkedin    String?
+  portfolio   String?
+  education   Education[]
+  work        WorkExperience[]
+  projects    Project[]
+  skills      Skill[]
+}
+
+model Education {
+  id          Int     @id @default(autoincrement())
+  school      String
+  degree      String
+  startDate   DateTime
+  endDate     DateTime?
+  profileId   Int
+  profile     Profile @relation(fields: [profileId], references: [id])
+}
+
+model WorkExperience {
+  id          Int     @id @default(autoincrement())
+  company     String
+  role        String
+  description String?
+  profileId   Int
+  profile     Profile @relation(fields: [profileId], references: [id])
+}
+
+model Project {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String
+  link        String?
+  profileId   Int
+  profile     Profile @relation(fields: [profileId], references: [id])
+  skills      Skill[] // Relation to filter projects by skill
+}
+
+model Skill {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  level     String?   // e.g., "Expert", "Beginner"
+  profileId Int?
+  profile   Profile?  @relation(fields: [profileId], references: [id])
+  projects  Project[]
+}
